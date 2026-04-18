@@ -10,7 +10,10 @@ declare -px > /etc/autorestic.env
 
 if [ "${AUTORESTIC_SKIP_INIT}" != "true" ]; then
     echo "[entrypoint] Running autorestic check..."
-    autorestic -c "${AUTORESTIC_CONFIG}" --ci check
+    if ! autorestic -c "${AUTORESTIC_CONFIG}" --verbose check; then
+        echo "[entrypoint] ERROR: autorestic check failed. Stopping container."
+        exit 1
+    fi
 else
     echo "[entrypoint] AUTORESTIC_SKIP_INIT=true — check ignored."
 fi
