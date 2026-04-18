@@ -9,13 +9,14 @@ AUTORESTIC_CONFIG="${AUTORESTIC_CONFIG:-/data/.autorestic.yml}"
 declare -px > /etc/autorestic.env
 
 if [ "${AUTORESTIC_SKIP_INIT}" != "true" ]; then
-    echo "[entrypoint] Running autorestic check..."
-    if ! autorestic -c "${AUTORESTIC_CONFIG}" --verbose check; then
-        echo "[entrypoint] ERROR: autorestic check failed. Stopping container."
+    echo "[entrypoint] Backends initialization..."
+    init_output=$(autorestic -c "${AUTORESTIC_CONFIG}" --ci exec -a -- init 2>&1)
+    init_exit=$?
+    echo "$init_output"
+    if [ $init_exit -ne 0 ] && ! echo "$init_output" | grep -q "already initialized"; then
+        echo "[entrypoint] ERROR: Backends initialization failed"
         exit 1
     fi
-else
-    echo "[entrypoint] AUTORESTIC_SKIP_INIT=true — check ignored."
 fi
 
 mkdir -p /var/spool/cron/crontabs
