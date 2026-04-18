@@ -10,3 +10,4 @@ It runs a cron job that executes the autorestic backup command according to the 
 
 * `CRON_SCHEDULE` : Cron schedule for backup (default: `*/5 * * * *`)
 * `AUTORESTIC_CONFIG` : Path to autorestic config file (default: `/data/.autorestic.yml`)
+* `AUTORESTIC_SKIP_INIT` : If set to "true", the autorestic check command will be skipped on startup (default: `false`)

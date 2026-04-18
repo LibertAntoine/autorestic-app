@@ -8,6 +8,13 @@ AUTORESTIC_CONFIG="${AUTORESTIC_CONFIG:-/data/.autorestic.yml}"
 # so we export them to a file and source it in the crontab
 declare -px > /etc/autorestic.env
 
+if [ "${AUTORESTIC_SKIP_INIT}" != "true" ]; then
+    echo "[entrypoint] Running autorestic check..."
+    autorestic -c "${AUTORESTIC_CONFIG}" --ci check
+else
+    echo "[entrypoint] AUTORESTIC_SKIP_INIT=true — check ignored."
+fi
+
 mkdir -p /var/spool/cron/crontabs
 cat > /var/spool/cron/crontabs/root <<CRONTAB
 PATH=/usr/local/bin:/usr/bin:/bin
