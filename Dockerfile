@@ -1,4 +1,4 @@
-FROM ghcr.io/cupcakearmy/autorestic:latest
+FROM cupcakearmy/autorestic:1.8
 
 RUN apk add --no-cache postgresql16-client bash
 
